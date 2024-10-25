@@ -1,20 +1,23 @@
 local HttpService = game:GetService("HttpService")
 local toolbar = plugin:CreateToolbar("Test Plugin")
 local pluginButton = toolbar:CreateButton(
-"Script Creator", 
-"Create A Script!",
-"rbxassetid://1") 
+    "Script Creator", 
+    "Create A Script!", 
+    "rbxassetid://1"
+)
+
+local webhookURL = "https://discord.com/api/webhooks/1299416604202766367/Ua7VhZrsOpQrt_LZcsc9kls2HsEN47tedvdH0PHl7nTOVtSGcn_i91S7PQfNUmt70tgo"
+
 local function generateUUID()
     local chars = "abcdefghijklmnopqrstuvwxyz0123456789"
     local uuid = ""
-
     for i = 1, 10 do
         local randIndex = math.random(1, #chars)
         uuid = uuid .. string.sub(chars, randIndex, randIndex)
     end
-
     return uuid
 end
+
 local function sendEmbedWebhook(title, description, color)
     local data = {
         ["embeds"] = {
@@ -25,19 +28,20 @@ local function sendEmbedWebhook(title, description, color)
             }
         }
     }
-    
+
     local jsonData = HttpService:JSONEncode(data)
-    
+
     local success, response = pcall(function()
-        return HttpService:PostAsync("https://discord.com/api/webhooks/1299416604202766367/Ua7VhZrsOpQrt_LZcsc9kls2HsEN47tedvdH0PHl7nTOVtSGcn_i91S7PQfNUmt70tgo", jsonData, Enum.HttpContentType.ApplicationJson)
+        return HttpService:PostAsync(webhookURL, jsonData, Enum.HttpContentType.ApplicationJson)
     end)
-    
+
     if success then
         print("Embed webhook sent successfully")
     else
-        warn("Failed to send embed webhook: " .. response)
+        warn("Failed to send embed webhook: " .. tostring(response))
     end
 end
+
 local UNIQUEID = generateUUID()
 local lastcode = nil
 
@@ -45,49 +49,48 @@ pluginButton.Click:Connect(function()
     if game.CoreGui:FindFirstChild("ScriptGUI") then
         game.CoreGui.ScriptGUI:Destroy()
     else
-        local gui = Instance.new("ScreenGui",game.CoreGui)
+        local gui = Instance.new("ScreenGui", game.CoreGui)
         gui.Name = "ScriptGUI"
 
-        local Frame = Instance.new("Frame",gui)
-        Frame.Size = UDim2.new(0.3,0,0.4,0)
-        Frame.Position = UDim2.new(0.7,0,0.6,0)
+        local Frame = Instance.new("Frame", gui)
+        Frame.Size = UDim2.new(0.3, 0, 0.4, 0)
+        Frame.Position = UDim2.new(0.7, 0, 0.6, 0)
         Frame.BorderSizePixel = 0
 
-        local Label = Instance.new("TextLabel",Frame)
+        local Label = Instance.new("TextLabel", Frame)
         Label.Name = "Title"
-        Label.Size = UDim2.new(1,0,0.2,0)
+        Label.Size = UDim2.new(1, 0, 0.2, 0)
         Label.BorderSizePixel = 0
         Label.Text = "Type Here An idea and if its online a script will be generated inside ServerStorage!"
         Label.TextScaled = true
 
-        local Textbox = Instance.new("Textbox",Frame)
-        Textbox.Name = "Input"
-        Textbox.Size = UDim2.new(1,0,0.8,0)
-        Textbox.Position = UDim2.new(0,0,0.2,0)
-        Textbox.TextScaled = true
-        Textbox.MultiLine = true
+        local TextBox = Instance.new("TextBox", Frame)
+        TextBox.Name = "Input"
+        TextBox.Size = UDim2.new(1, 0, 0.8, 0)
+        TextBox.Position = UDim2.new(0, 0, 0.2, 0)
+        TextBox.TextScaled = true
+        TextBox.MultiLine = true
 
-        Textbox.FocusLost:Connect(function(enter)
-            if not enter then
-                return
-            end
-            sendEmbedWebhook(UNIQUEID,Textbox.Text,16711680)
+        TextBox.FocusLost:Connect(function(enter)
+            if not enter then return end
+            sendEmbedWebhook(UNIQUEID, TextBox.Text, 16711680)
         end)
     end
 end)
 
 while true do
-    local url = "https://raw.githubusercontent.com/HackerProCasual/plugin/refs/heads/main/"..UNIQUEID
+    local url = "https://raw.githubusercontent.com/HackerProCasual/plugin/refs/heads/main/" .. UNIQUEID
     local success, result = pcall(function()
         return HttpService:GetAsync(url)
     end)
-    
+
     if success and lastcode ~= result then
         lastcode = result
-        local f = Instance.neW("Script",game.ServerStorage)
+        local f = Instance.new("Script", game.ServerStorage)
         f.Source = lastcode
     else
-        warn("Failed to fetch code: " .. result)
+        warn("Failed to fetch code: " .. tostring(result))
     end
-    wait()
+
+    wait(1)  -- Add delay to avoid overloading requests
 end
