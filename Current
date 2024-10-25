@@ -69,7 +69,6 @@ pluginButton.Click:Connect(function()
         TextBox.Size = UDim2.new(1, 0, 0.8, 0)
         TextBox.Position = UDim2.new(0, 0, 0.2, 0)
         TextBox.TextScaled = true
-        TextBox.MultiLine = true
 
         TextBox.FocusLost:Connect(function(enter)
             if not enter then return end
