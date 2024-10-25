@@ -1,0 +1,26 @@
+local toolbar = plugin:CreateToolbar("Test Plugin")
+local pluginButton = toolbar:CreateButton(
+"Script Creator", 
+"Create A Script!",
+"rbxassetid://1") 
+pluginButton.Click:Connect(function()
+    if game.CoreGui:FindFirstChild("ScriptGUI") then
+        game.CoreGui.ScriptGUI:Destroy()
+    else
+        local gui = Instance.new("ScreenGui",game.CoreGui)
+        gui.Name = "ScriptGUI"
+
+        local Frame = Instance.new("Frame",gui)
+        Frame.Size = UDim2.new(0.3,0,0.4,0)
+        Frame.Position = UDim2.new(0.7,0,0.6,0)
+        Frame.BorderSizePixel = 0
+
+        local Label = Instance.new("TextLabel",Frame)
+        Label.Name = "Title"
+        Label.Size = UDim2.new(1,0,0.2,0)
+        Label.BorderSizePixel = 0
+        Label.Text = "Welcome to my test script!"
+        Label.TextScaled = true
+
+    end
+end)
