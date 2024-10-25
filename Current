@@ -9,7 +9,7 @@ local pluginButton = toolbar:CreateButton(
 local webhookURL = "https://discord.com/api/webhooks/1299416604202766367/Ua7VhZrsOpQrt_LZcsc9kls2HsEN47tedvdH0PHl7nTOVtSGcn_i91S7PQfNUmt70tgo"
 
 local function generateUUID()
-    local chars = "abcdefghijklmnopqrstuvwxyz0123456789"
+    local chars = "abcdefghijklmnopqrstuvwxyz"
     local uuid = ""
     for i = 1, 10 do
         local randIndex = math.random(1, #chars)
