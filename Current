@@ -1,3 +1,4 @@
+local HttpService = game:GetService("HttpService")
 local toolbar = plugin:CreateToolbar("Test Plugin")
 local pluginButton = toolbar:CreateButton(
 "Script Creator", 
